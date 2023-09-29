@@ -1,51 +1,30 @@
-import { useState } from 'react'    
-
-const Content = (props) => {
-  return(
-    <div>
-      <p>
-        {props.part1} {props.exercises1}
-      </p>
-      <p>
-        {props.part2} {props.exercises2}
-      </p>
-      <p>
-        {props.part3} {props.exercises3}
-      </p>
-      
-    </div>
-  )
-}
-const Total = (props) => {
-  return <p >Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
-}
+import { useState } from 'react'
 
 const App = () => {
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas' }
+  ]) 
+  const [newName, setNewName] = useState('')
 
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-
-  const part3 = 'State of a component'
-  const exercises3 = 14
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    setPersons([...persons, {name: newName}])
+  }
 
   return (
     <div>
-      <Header />
-      <Content 
-      part1={part1} 
-      part2={part2} 
-      part3={part3}
-      exercises1={exercises1} 
-      exercises2={exercises2} 
-      exercises3={exercises3} 
-      />
-      <Total
-      exercises1={exercises1} 
-      exercises2={exercises2} 
-      exercises3={exercises3}  
-      />
+      <h2>Phonebook</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          name: <input onChange={(i) => setNewName(i.target.value)}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      {persons.map((persons) => 
+      <p>{persons.name}</p>)}
     </div>
   )
 }
