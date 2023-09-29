@@ -11,19 +11,59 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.',
     'The only way to go fast, is to go well.'
   ]
+  const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState(new Uint8Array(anecdotes.length));
+  const [mostVotes, setMostVotes] = useState(0)
+  const [pos, setPos] = useState(0);
 
-  const [selected, setSelected] = useState(0)
-  const SwitchAnecdote = () => {
-  var numberi = Math.floor((Math.random() * anecdotes.length));
-  setSelected(numberi)
+  const handleSelect = () => {
+    var Numberi = Math.floor((Math.random() * anecdotes.length) + 0);
+    setSelected(Numberi)
+    mostVotesFunc();
   }
+
+  const handleVote = () => {
+    var pisteet = [points];
+    pisteet[selected] += 1;
+    setPoints(pisteet);
+    mostVotesFunc();
+  }
+
+  const mostVotesFunc = () => {
+    var yksi = points[0];
+    var Toimi = 0;
+
+    for(let i = 0; i < points.length; i++){
+      if(points[i] === 0){
+        if(points[i] > yksi){
+          yksi = points[i];
+          Toimi = i;
+        }
+      }else{
+        if(points[i] > yksi -1){
+          yksi = points[i];
+          Toimi = i;
+        }
+      }
+    }
+    setMostVotes(yksi);
+    setPos(Toimi);
+  }
+
   return (
     <div>
       {anecdotes[selected]}
       <br/>
-      <button onClick={SwitchAnecdote}>
-       next anecdote
-      </button>
+       {points[selected]} ääntä
+      <br/>
+      <button onClick={handleVote}>vote</button>
+      <button onClick={handleSelect}>next anecdote</button>
+
+      <div>
+        <h1>Anecdote jolla on eniten ääniä on:</h1>
+        <i>{anecdotes[pos]}</i>
+        <p> <b>{points[selected] === mostVotes + 1? points[selected] : mostVotes}</b> äänellä </p>
+      </div>
     </div>
   )
 }
