@@ -31,8 +31,8 @@ const App = () => {
     const obj = {nimi: newnimi, numero: newnumero};
 
     if (valid(obj, persons)) {
-      alert(`${newnimi} is already added to phonebook`)
-      alert(`${newnumero} is already added to phonebook`)
+      alert(`${newnimi} on jo lisätty kirjaan`)
+      alert(`${newnumero} on jo lisätty kirjaan`)
     }else{
       setPersons([...persons, obj])
     }
