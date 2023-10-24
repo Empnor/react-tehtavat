@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios';
-import { getJson, exterminateJson, sendJson } from './server';
+import { getJson, exterminateJson, sendJson } from './Server';
 
-
-const valid = (obj, arr) => {
-  for (var j = 0; j < arr.length; j++) {
+const checkValidity = (obj, arr) => {
+  for (let j = 0; j < arr.length; j++) {
     if(arr[j].nimi === obj.nimi || arr[j].numero === obj.numero){
       return true;
     }
@@ -15,8 +14,7 @@ const valid = (obj, arr) => {
 const Filtered = (props) => {
     return(
       <div>
-        <h2>näytä </h2>
-        <input type='text' onChange={props.Filtteri}/>
+         <input type='text' onChange={props.func}/>
       </div>
     )
 }
@@ -29,7 +27,7 @@ const PersonForm = (props) => {
           numero: <input onChange={(i) => props.setNewnumero(i.target.value)}/>
         </div>
         <div>
-          <button type="submit">add</button>
+          <button type="submit">lisää</button>
         </div>
     </div>
   )
@@ -38,13 +36,14 @@ const Persons = (props) => {
   return(
     <div>
       {
-        props.filter == "" ?
+        props.filter == "" 
           props.persons.map((person) =>
           <div><p>{person.nimi  + " "}
-          {person.numero}</p><button onClick={ () =>props.poista(person.id)}>Poista</button></div>)
+          {person.numero}</p><button onClick={ () =>props.delete(person.id)}>Poista</button></div>)
           :
           props.filteredPersons.map((person) =>
-          <div><p>{person.nimi  + " "} {person.numero}</p><button onClick={ () =>props.poista(person.id)}>Poista</button></div>)
+          <div><p>{person.nimi  + " "}
+          {person.numero}</p><button onClick={ () =>props.delete(person.id)}>Poista</button></div>)
          
       }
     </div>
@@ -57,19 +56,13 @@ const App = () => {
   const [newnumero, setNewnumero] = useState('')
   const [filteredPersons, setFilteredPerson] = useState([])
   
-  const [submit, setSubmit] = useState(false);
-  const [poistadnimi, setpoistadnimi] = useState("")
-  const [poistad, setpoistad] = useState(false);
-  const [changed, setChanged] = useState(false);
-  const [changednimi, setChangednimi] = useState(false);
-  
   const updataData = async () => {
     try {
       const data = await getJson();
       setPersons(data);
       
     } catch (error) {
-      console.error('Ongelma tuli datan etsimisessä:', error);
+      console.error('Error fetching data:', error);
       
     }
   }
@@ -91,87 +84,46 @@ const App = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    let kopioi = [...persons];
+    let copy = [...persons];
     let objekti = {
       nimi: newnimi,
       numero: newnumero,
       id: (persons.length+1)
     };
-    if(valid(objekti, kopioi)  ){
+    if(checkValidity(objekti, copy)  ){
         objekti.numero = String(objekti.numero)
-        kopioi.push(objekti)
-        setPersons(kopioi)
+        copy.push(objekti)
+        setPersons(copy)
     }
-
-    console.log(objekti, valid(objekti, kopioi))
+    
+    console.log(objekti, checkValidity(objekti, copy))
     try {
       await sendJson(objekti);
-      setSubmit(true);
-       
-        
-       
-        
-      
-      
-    setTimeout(() => {
-      setSubmit(false);
-    }, 2000);
       updataData()
     } catch (error) {
       console.error(error);
     }
   }
 
-  const datapoista = async (id) => {
+  const dataDelete = async (id) => {
     if(window.confirm("Haluatko varmasti poistaa numeron?")){
       try {
         await exterminateJson(id);
-        
-        setpoistad(true);
-        for (let u = 0; u < persons.length; u++ ) {
-          if (id === persons[u].id) {
-            setpoistadnimi(persons[u].nimi)
-            break
-          }
-        }
-        
-      setTimeout(() => {
-        setpoistad(false);
-      }, 2000);
-      await updataData()
-      } 
-      catch (error) {
+        await updataData()
+      } catch (error) {
         console.error(error)
-
       }
     }    
   }
-  
 
 
 
   return (
     <div>
-       <div>
-          {
-            submit ?
-            <p>lisättiin {newnimi}</p>
-            :
-              poistad ?
-                <p>postettiin {poistadnimi}</p>
-              :
-                changed ?
-                  <p>Vaihdettiin {changednimi} </p>
-                :
-              <></>
-          }
-        </div>
- 
-
       <h1>Puhelin luettelo</h1>
 
       <Filtered
-        Filtteri={handleFilter}
+        func={handleFilter}
       />
       <h2>Lisää uusi</h2>
 
@@ -183,12 +135,12 @@ const App = () => {
       </form>
 
 
-      <h2>numerot</h2>
+      <h2>Numerot</h2>
       <Persons 
         filteredPersons={filteredPersons}
         filter={filter}
         persons={persons}
-        poista={datapoista}
+        delete={dataDelete}
       />
     </div>
   )
