@@ -1,57 +1,40 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
+function lista() {
+  const [Tehtävät, setTehtävät] = useState([]);
+  const [Tehtävä, setTehtävä] = useState('');
 
-class laskin extends Component {
-  constructor() {
-    super();
-    this.state = {
-      arvo: '0',
-    };
-  }
-
-  handleButtonClick = (event) => {
-    const value = event.target.innerText;
-    this.setState((prevState) => ({
-      arvo: prevState.arvo === '0' ? value : prevState.arvo + value,}));
-  };
-
-  handleCalculate = () => {
-    try {
-      const result = eval(this.state.arvo);
-      this.setState({ arvo: result });
-    } catch (error) {
-      this.setState({ arvo: 'Error' });
+  const addTehtävä = () => {
+    if (Tehtävä.trim() !== '') {
+    setTehtävät([...Tehtävät, Tehtävä]);
+    setTehtävä('');
     }
   };
 
-  handleClear = () => {
-    this.setState({ arvo: '0' });
+  const deleteTehtävä = (index) => {
+    const updatedTehtävät = Tehtävät.filter((_, i) => i !== index);
+    setTehtävät(updatedTehtävät);
   };
 
-  render() {
-    return (
-      <div>
-        <div>{this.state.arvo}</div>
-        <div>
-          <button onClick={this.handleButtonClick}>1</button>
-          <button onClick={this.handleButtonClick}>2</button>
-          <button onClick={this.handleButtonClick}>3</button>
-          <button onClick={this.handleButtonClick}>4</button>
-          <button onClick={this.handleButtonClick}>5</button>
-          <button onClick={this.handleButtonClick}>6</button>
-          <button onClick={this.handleButtonClick}>7</button>
-          <button onClick={this.handleButtonClick}>8</button>
-          <button onClick={this.handleButtonClick}>9</button>
-          <button onClick={this.handleButtonClick}>0</button>
-          <button onClick={this.handleButtonClick}>+</button>
-          <button onClick={this.handleButtonClick}>-</button>
-          <button onClick={this.handleCalculate}>=</button>
-          <button onClick={this.handleClear}>C</button>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h1>Tehtävä lista</h1>
+      <input
+        type="text"
+        value={Tehtävä}
+        onChange={(e) => setTehtävä(e.target.value)}
+      />
+      <button onClick={addTehtävä}>Lisää</button>
+      <ul>
+        {Tehtävät.map((Tehtävä, index) => (
+          <li key={index}>
+            {Tehtävä}
+            <button onClick={() => deleteTehtävä(index)}>Poista</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default laskin;
-
+export default lista;
