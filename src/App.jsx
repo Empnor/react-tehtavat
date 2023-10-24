@@ -1,32 +1,57 @@
-import { useState } from 'react'
+import React, { Component } from 'react';
 
-const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
-  const [newName, setNewName] = useState('')
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    setPersons([...persons, {name: newName}])
+class laskin extends Component {
+  constructor() {
+    super();
+    this.state = {
+      arvo: '0',
+    };
   }
 
-  return (
-    <div>
-      <h2>Phonebook</h2>
-      <form onSubmit={handleSubmit}>
+  handleButtonClick = (event) => {
+    const value = event.target.innerText;
+    this.setState((prevState) => ({
+      arvo: prevState.arvo === '0' ? value : prevState.arvo + value,}));
+  };
+
+  handleCalculate = () => {
+    try {
+      const result = eval(this.state.arvo);
+      this.setState({ arvo: result });
+    } catch (error) {
+      this.setState({ arvo: 'Error' });
+    }
+  };
+
+  handleClear = () => {
+    this.setState({ arvo: '0' });
+  };
+
+  render() {
+    return (
+      <div>
+        <div>{this.state.arvo}</div>
         <div>
-          name: <input onChange={(i) => setNewName(i.target.value)}/>
+          <button onClick={this.handleButtonClick}>1</button>
+          <button onClick={this.handleButtonClick}>2</button>
+          <button onClick={this.handleButtonClick}>3</button>
+          <button onClick={this.handleButtonClick}>4</button>
+          <button onClick={this.handleButtonClick}>5</button>
+          <button onClick={this.handleButtonClick}>6</button>
+          <button onClick={this.handleButtonClick}>7</button>
+          <button onClick={this.handleButtonClick}>8</button>
+          <button onClick={this.handleButtonClick}>9</button>
+          <button onClick={this.handleButtonClick}>0</button>
+          <button onClick={this.handleButtonClick}>+</button>
+          <button onClick={this.handleButtonClick}>-</button>
+          <button onClick={this.handleCalculate}>=</button>
+          <button onClick={this.handleClear}>C</button>
         </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {persons.map((persons) => 
-      <p>{persons.name}</p>)}
-    </div>
-  )
+      </div>
+    );
+  }
 }
 
-export default App
+export default laskin;
+
