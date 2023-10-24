@@ -2,7 +2,7 @@
     "persons":[
       { 
         "name": "Arto Hellas", 
-        "number": "040-123456",
+        "number": "040123456",
         "id": 1
       },
       { 
@@ -12,12 +12,12 @@
       },
       { 
         "name": "sexmane", 
-        "number": "34-23-43322",
+        "number": "342343322",
         "id": 7
       },
       { 
         "name": "harri", 
-        "number": "44943-320329",
+        "number": "44943320329",
         "id": 13
       }
     ]

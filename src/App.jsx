@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getJson, exterminateJson, sendJson } from './dbjson';
+import axios from 'axios';
+import { getJson, exterminateJson, sendJson } from './server';
 
 
 const valid = (obj, arr) => {
@@ -14,7 +15,7 @@ const valid = (obj, arr) => {
 const Filtered = (props) => {
     return(
       <div>
-        <h2>filter shown with </h2>
+        <h2>näytä </h2>
         <input type='text' onChange={props.Filtteri}/>
       </div>
     )
@@ -25,7 +26,7 @@ const PersonForm = (props) => {
     <div>
       <div>
           nimi: <input onChange={(i) => props.setNewnimi(i.target.value)}/><br/>
-          numero: <input onChange={(i) => props.setNewnumero(e.target.value)}/>
+          numero: <input onChange={(i) => props.setNewnumero(i.target.value)}/>
         </div>
         <div>
           <button type="submit">add</button>
@@ -91,20 +92,20 @@ const App = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     let kopioi = [...persons];
-    let objecti = {
+    let objekti = {
       nimi: newnimi,
       numero: newnumero,
       id: (persons.length+1)
     };
-    if(valid(objecti, kopioi)  ){
-        objecti.numero = String(objecti.numero)
-        kopioi.push(objecti)
+    if(valid(objekti, kopioi)  ){
+        objekti.numero = String(objekti.numero)
+        kopioi.push(objekti)
         setPersons(kopioi)
     }
 
-    console.log(objecti, valid(objecti, kopioi))
+    console.log(objekti, valid(objekti, kopioi))
     try {
-      await sendJson(objecti);
+      await sendJson(objekti);
       setSubmit(true);
        
         
